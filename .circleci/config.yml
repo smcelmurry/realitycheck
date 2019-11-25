@@ -36,6 +36,11 @@ contexts_defaults: &contexts_defaults
   docker: [{image: 'alpine:latest'}]
   working_directory: /a/contexts/test
 
+windows_defaults: &windows_defaults
+  machine: 
+    image: windows-default
+  resource_class: windows.medium
+
 workspaces_defaults: &workspaces_defaults
   docker: [{image: 'circleci/node:latest'}]
   working_directory: ~/foo/bar
@@ -76,6 +81,11 @@ jobs:
           echo 'Done sleeping.'
     environment:
       SLEEP: 1
+
+  windows:
+    <<: *windows_defaults
+    steps:
+      - run: systeminfo
 
   remote_docker:
     <<: *remote_docker_defaults
@@ -212,6 +222,7 @@ workflows:
       - remote_docker
       - docker_layer_caching
       - machine_dlc
+      - windows
 
   feature_jobs:
     jobs:
